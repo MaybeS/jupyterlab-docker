@@ -1,8 +1,16 @@
-FROM python:alpine
+FROM python:3.8-alpine
 
 # Install required packages
-RUN apk add --update --virtual=.build-dependencies alpine-sdk nodejs ca-certificates musl-dev gcc python-dev make cmake g++ gfortran libpng-dev freetype-dev libxml2-dev libxslt-dev
+RUN apk add --update --virtual=.build-dependencies alpine-sdk nodejs ca-certificates\
+            musl-dev gcc python3-dev make cmake g++ gfortran libpng-dev freetype-dev\
+            libxml2-dev libxslt-dev libffi-dev openssl-dev libpng-dev jpeg-dev
 RUN apk add --update git
+
+# Install zmq
+RUN apk update && apk add build-base libzmq musl-dev python3 python3-dev zeromq-dev
+RUN pip install pyzmq
+# reduce image size by cleaning up the build packages
+RUN apk del build-base musl-dev python3-dev zeromq-dev
 
 # Install Jupyter
 RUN pip install jupyter
@@ -33,9 +41,15 @@ ENV LANG=C.UTF-8
 
 # Install Python Packages & Requirements (Done near end to avoid invalidating cache)
 COPY requirements.txt requirements.txt
+
+RUN mkdir -p /opt/app/data
+COPY cert/ /opt/app/cert/
+COPY jupyter_notebook_config.py /opt/app
+
+RUN mkdir -p ~/.jupyter
+RUN mv /opt/app/jupyter_notebook_config.py ~/.jupyter
 RUN pip install -r requirements.txt
 
 # Expose Jupyter port & cmd
 EXPOSE 8888
-RUN mkdir -p /opt/app/data
 CMD jupyter lab --ip=* --port=8888 --no-browser --notebook-dir=/opt/app/data --allow-root
