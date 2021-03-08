@@ -151,7 +151,6 @@ c.NotebookApp.allow_remote_access = True
 ## The full path to an SSL/TLS certificate file.
 #  Default: ''
 # c.NotebookApp.certfile = '/opt/app/cert/fullchain.pem'
-c.NotebookApp.certfile = './cert/fullchain.pem'
 
 ## The full path to a certificate authority certificate for SSL/TLS client
 #  authentication.
@@ -284,7 +283,7 @@ c.NotebookApp.certfile = './cert/fullchain.pem'
 
 ## The IP address the notebook server will listen on.
 #  Default: 'localhost'
-c.NotebookApp.ip = '0.0.0.0'
+c.NotebookApp.ip = '*'
 
 ## Supply extra arguments that will be passed to Jinja environment.
 #  Default: {}
@@ -309,7 +308,6 @@ c.NotebookApp.ip = '0.0.0.0'
 ## The full path to a private key file for usage with SSL/TLS.
 #  Default: ''
 # c.NotebookApp.keyfile = '/opt/app/cert/privkey.pem'
-c.NotebookApp.keyfile = './cert/privkey.pem'
 
 ## Hostnames to allow as local when allow_remote_access is False.
 #  
